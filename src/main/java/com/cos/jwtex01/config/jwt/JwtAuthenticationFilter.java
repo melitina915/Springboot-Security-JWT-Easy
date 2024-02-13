@@ -146,5 +146,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	// -> 클라이언트 쪽으로 JWT 토큰을 응답
 	// -> 요청할 때마다 JWT 토큰을 가지고 요청
 	// -> 서버는 JWT 토큰이 유효한지를 판단하는 필터가 필요하다 (해당 필터를 만들어야 한다.)
-	
+
 }
