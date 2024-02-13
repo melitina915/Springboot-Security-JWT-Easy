@@ -24,6 +24,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
+// 토큰 : cos 이걸 만들어줘야 함.
+// id, pw 정상적으로 들어와서 로그인이 완료되면 토큰을 만들어주고 응답해준다.
+// 요청할 때 마다 header에 Authorization에 value 값으로 토큰을 가지고 온다.
+// 그 때 토큰이 넘어오면 해당 토큰이 내가 만든 토큰이 맞는지만 검증하면 된다.
+// (RSA, HS256)
+
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
