@@ -60,9 +60,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
+		// ObjectMapper라는 클래스가 JSON 데이터를 파싱해준다.
 		LoginRequestDto loginRequestDto = null;
 		try {
 			loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
+			// InputStream 안에 username과 password가 담겨있다.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,10 +72,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		System.out.println("JwtAuthenticationFilter : "+loginRequestDto);
 		
 		// 유저네임패스워드 토큰 생성
-		UsernamePasswordAuthenticationToken authenticationToken = 
+		UsernamePasswordAuthenticationToken authenticationToken =
+		// 로그인 시도를 위해 직접 토큰을 만들어야 한다.
+		// 원래 폼로그인을 하면 자동으로 토큰이 생성된다.
 				new UsernamePasswordAuthenticationToken(
 						loginRequestDto.getUsername(), 
 						loginRequestDto.getPassword());
+		// 이렇게 만든 토큰으로 로그인 시도를 해본다.
 		
 		System.out.println("JwtAuthenticationFilter : 토큰생성완료");
 		
@@ -88,13 +93,25 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// 결론은 인증 프로바이더에게 알려줄 필요가 없음.
 		Authentication authentication = 
 				authenticationManager.authenticate(authenticationToken);
-		
+		// DB에 있는 username과 password가 일치하면 인증이 된다.
+		// 토큰을 날린다.
+		// 그러면 PrincipalDetailsService의 loadUserByUsername() 함수가 실행된 후 정상이면 authentication이 리턴된다.
+		// AuthenticationManager에 토큰을 넣어 던지면 인증을 받게 된다.
+		// 그러면 authentication에는 로그인 한 정보가 담긴다.
+
 		PrincipalDetails principalDetailis = (PrincipalDetails) authentication.getPrincipal();
+		// 세션에 저장된 authentication에 있는 Principal 객체를 가져와서 로그인을 한다.
 		System.out.println("Authentication : "+principalDetailis.getUser().getUsername());
 		return authentication;
+		// authentication 객체가 session 영역에 저장되고 이를 return한다.
+		// return하는 이유는 권한 관리를 security가 대신 해주기 때문에 편하려고 하는 것이다.
+		// 굳이 JWT 토큰을 사용하면서 세션을 만들 이유가 없다.
+		// 단지 권한 처리때문에 세션을 넣어준다.
 	}
 
 	// JWT Token 생성해서 response에 담아주기
+	// attemptAuthentication 실행 후 정상적으로 인증되면 successfulAuthentication 함수가 실행된다.
+	// JWT 토큰을 만들어서 request 요청한 사용자에게 JWT 토큰을 response해주면 된다.
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {

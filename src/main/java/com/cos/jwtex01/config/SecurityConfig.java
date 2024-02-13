@@ -34,6 +34,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 //
 //	@Autowired
 //	private CorsConfig corsConfig;
+
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	// BCryptPasswordEncoder를 등록해주면 스프링에서 알아서 해당 부분을 찾아 암호화해준다.
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
