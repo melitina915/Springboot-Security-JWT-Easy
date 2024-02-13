@@ -117,15 +117,34 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication authResult) throws IOException, ServletException {
 		
 		PrincipalDetails principalDetailis = (PrincipalDetails) authResult.getPrincipal();
-		
+		// PrincipalDetails를 통해 JWT 토큰을 만든다.
+
+		// RSA 방식은 아니고 Hash 암호방식
 		String jwtToken = JWT.create()
 				.withSubject(principalDetailis.getUsername())
+				// 토큰 이름
 				.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
+				// 토큰 만료 시간으로 토큰이 언제까지 유효한지 정해준다.
+				// 일정 시간이 지나면 해당 토큰으로는 더 이상 로그인하지 못한다.
+				// 토큰 만료 시간은 최소 10분 정도로 짧다
 				.withClaim("id", principalDetailis.getUser().getId())
+				// withClaim 비공개 클레임으로, 넣고 싶은 값을 마음대로 넣어도 된다.
 				.withClaim("username", principalDetailis.getUser().getUsername())
 				.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 		
 		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
 	}
+
+	// username, password 로그인 정상
+	// -> 서버 쪽에서 세션 ID 생성
+	// -> 이를 클라이언트로 쿠키 세션 ID를 응답
+	// -> 요청할 때마다 쿠키값 세션 ID를 항상 들고 서버쪽으로 요청하기 때문에
+	// 서버는 세션 ID가 유효한지 판단하여 유효하면 인증이 필요한 페이지로 접근하게 한다.
+
+	// username, password 로그인 정상
+	// -> JWT 토큰을 생성
+	// -> 클라이언트 쪽으로 JWT 토큰을 응답
+	// -> 요청할 때마다 JWT 토큰을 가지고 요청
+	// -> 서버는 JWT 토큰이 유효한지를 판단하는 필터가 필요하다 (해당 필터를 만들어야 한다.)
 	
 }
