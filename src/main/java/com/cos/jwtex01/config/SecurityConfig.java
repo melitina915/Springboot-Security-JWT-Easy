@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				// JWT이므로 세션을 사용하지 않는 STATELESS 서버로 만들겠다는 의미
+				// STATELESS는 세션을 사용하지 않겠다는 의미
 			.and()
 				.formLogin().disable()
 				// ID, PW로 폼 로그인을 하지 않는 JWT 서버이므로 disable
