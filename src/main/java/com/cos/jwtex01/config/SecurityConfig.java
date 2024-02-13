@@ -53,6 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				// 기본적인 http 로그인 방식들을 전혀 쓰지 않는다
 
 				.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+				// UsernamePasswordAuthenticationFilter는 로그인을 진행하는 필터이기 때문에
+				// AuthenticationManager를 통해서 로그인을 진행한다.
+				// WebSecurityConfigurerAdapter가 AuthenticationManager를 가지고 있다.
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
 				.authorizeRequests()
 				.antMatchers("/api/v1/user/**")

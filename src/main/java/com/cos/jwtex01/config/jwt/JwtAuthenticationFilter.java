@@ -32,6 +32,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+// 스프링 시큐리티에서 UsernamePasswordAuthenticationFilter가 있음
+// login 요청해서 username, password 전송하면 post로
+// UsernamePasswordAuthenticationFilter가 동작한다.
+// UsernamePasswordAuthenticationFilter는 로그인을 진행하는 필터이기 때문에
+// AuthenticationManager를 통해서 로그인을 진행한다.
 
 	private final AuthenticationManager authenticationManager;
 	
@@ -40,9 +45,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		
+		// /login 요청을 하면 로그인 시도를 위해서 실행되는 함수
+		// /login 요청이 들어오면 이를 UsernamePasswordAuthentication이 받아 attemptAuthentication 함수에서 처리한다.
+
 		System.out.println("JwtAuthenticationFilter : 진입");
-		
+
+		// 1. username, password를 받아
+		// 2. 정상인지 로그인 시도를 해본다.
+		// authenticationManager로 로그인 시도를 하면 PrincipalDetailsService가 호출되어 loadUserByUsername 함수가 실행된다.
+		// 해당 함수가 실행되어 PrincipalDetails가 리턴되면 PrincipalDetails는 세션에서 받는다.
+		// 3. PrincipalDetails를 (권한 관리를 위해) 세션에 담고
+		// 4. JWT 토큰을 만들어서 응답해주면 된다.
+		// 세션에 담지 않으면 권한 관리가 되지 않는다.
+
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
 		LoginRequestDto loginRequestDto = null;
