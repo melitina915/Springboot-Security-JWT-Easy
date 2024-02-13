@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cos.jwtex01.config.auth.PrincipalDetails;
 import com.cos.jwtex01.model.User;
@@ -16,6 +12,9 @@ import com.cos.jwtex01.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+//@CrossOrigin
+//// 인증이 필요하지 않은 요청들만 허용된다
+//// 로그인을 해야하는 요청들은 해결되지 않는다
 @RestController
 @RequestMapping("api/v1")
 @RequiredArgsConstructor
